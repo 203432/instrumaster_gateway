@@ -1,0 +1,131 @@
+http:
+  port: 8080
+admin:
+  port: 9876
+  host: localhost
+apiEndpoints:
+  api:
+    host: localhost
+    paths: '/ip'
+  curso:
+    host: '*'
+    paths: ["/course","/course/id/:id"]
+  leccion:
+    host: '*'
+    paths: ["/lessons","/lessons/Courseid/:id","/lessons/id/:id"]
+  ejercicio:
+    host: '*'
+    paths: [
+    "/exercise","/exercise/lessonId/:id","/exercise/id/:id","/exercise/answer/:id",
+    "/answer","/answer/exerciseId/:id","/answer/id/:id", "/answer/four/:id"
+    ]
+  recursos:
+    host: '*'
+    paths: ["/api/v1/resources","/api/v1/resources/:pk","/api/v1/resources/bylesson/:id_lesson"]
+  perfiles:
+    host: '*'
+    paths: ["/api/v1/logout/","/api/v1/login/","/api/v1/register/","api/v1/logoutall/","api/v1/token/","api/v1/token/refresh/",
+            "/api/v1/progress/","/api/v1/progress/:pk","/api/v1/icons/","/api/v1/profiles/","/api/v1/profiles/:pk","/api/v1/progress/byuser/:user_id",
+            "/api/v1/progress/complete/resource/:pk","/api/v1/progress/complete/question/:pk"]
+  practicas:
+    host: '*'
+    paths: ["/api/model/","/api/practica/","/api/practica/bylesson/:id_lesson","api/contador/"]
+  
+  
+serviceEndpoints:
+  httpbin:
+    url: 'https://httpbin.org'
+  cursoServices: 
+    url: 'http://18.212.193.59'
+  leccionServices:
+    url: 'http://18.234.205.116'
+  ejercicioServices:
+    url: 'http://44.211.151.66'
+  recursosServices:
+    url: 'http://52.207.209.4'
+  perfilesServices:
+    url: 'http://54.86.183.49'
+  practicaService:
+    url: 'http://52.91.227.148'
+
+policies:
+  - basic-auth
+  - cors
+  - expression
+  - key-auth
+  - log
+  - oauth2
+  - proxy
+  - rate-limit
+pipelines:
+  default:
+    apiEndpoints:
+      - api
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: httpbin 
+              changeOrigin: true
+  cursoPipeline:
+    apiEndpoints:
+      - curso
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: cursoServices 
+              changeOrigin: true
+  leccionPipeline:
+    apiEndpoints:
+      - leccion
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: leccionServices 
+              changeOrigin: true
+  ejercicioPipeline:
+    apiEndpoints:
+      - ejercicio
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: ejercicioServices 
+              changeOrigin: true
+  recursoPipeline:
+    apiEndpoints:
+      - recursos
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: recursosServices 
+              changeOrigin: true
+  perfilesPipeline:
+    apiEndpoints:
+      - perfiles
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: perfilesServices 
+              changeOrigin: true
+  practicaPipeline:
+    apiEndpoints:
+      - practicas
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: practicaService 
+              changeOrigin: true
+
